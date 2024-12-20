@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt";
+import config from "../config/config";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
 
@@ -6,7 +8,10 @@ const createUser = async(payload: IUser)=>{
     if(checkEmailExists){
         throw new Error("Email already exists");
     }
-    const user = await UserModel.create(payload);
+
+    const hashedPassword = bcrypt.hashSync(payload.password, config.bcrypt_salt);
+
+    const user = await UserModel.create({...payload, password: hashedPassword});
     return user;
 }
 
