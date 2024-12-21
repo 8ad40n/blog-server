@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import config from "../config/config";
+import config from "../../config/config";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
 
