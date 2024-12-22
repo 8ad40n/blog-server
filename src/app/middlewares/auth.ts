@@ -6,28 +6,35 @@ import catchAsync from "../utils/catchAsync";
 
 export const auth = () => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
-    if (!token) {
-      throw new Error("Invalid or missing token");
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return next(new Error("Unauthorized: Missing or invalid token"));
     }
 
-    const decoded = jwt.verify(token, config.jwt_secret) as JwtPayload;
-    const { email, role, iat } = decoded;
+    const token = authHeader.split(" ")[1];
 
-    if (!email || !role) {
-      throw new Error("Invalid token payload");
+    try {
+      const decoded = jwt.verify(token, config.jwt_secret) as JwtPayload;
+      const { email, role } = decoded;
+
+      if (!email || !role) {
+        throw new Error(`Invalid token`);
+      }
+
+      const checkUser = await UserModel.findOne({ email });
+      if (!checkUser) {
+        throw new Error(`User not found`);
+      }
+
+      if (checkUser.isBlocked) {
+        throw new Error(`User is blocked`);
+      }
+      req.user = decoded;
+
+      next();
+    } catch (error) {
+      return next(new Error("Unauthorized: Invalid or expired token"));
     }
-
-    const checkUser = await UserModel.findOne({ email });
-    if (!checkUser) {
-      throw new Error("Email not found");
-    }
-    if (checkUser.isBlocked) {
-      throw new Error("User is blocked");
-    }
-
-    req.user = decoded as JwtPayload;
-    next();
-
   });
 };
