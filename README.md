@@ -35,7 +35,7 @@ Ensure the following are installed on your system:
    ```
 
    ```bash
-   cd Car-Store
+   cd blog-server
 
    ```
 
