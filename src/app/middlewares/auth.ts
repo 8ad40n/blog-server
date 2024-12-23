@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../config/config";
+import { TUserRole } from "../interfaces/userRole";
 import { UserModel } from "../modules/user/user.model";
 import catchAsync from "../utils/catchAsync";
 
-export const auth = () => {
+export const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
@@ -30,6 +31,12 @@ export const auth = () => {
       if (checkUser.isBlocked) {
         throw new Error(`User is blocked`);
       }
+
+      if (requiredRoles && !requiredRoles.includes(role)) {
+        throw new Error(`Unauthorized: User does not have the required role`);
+      }
+  
+
       req.user = decoded;
 
       next();
