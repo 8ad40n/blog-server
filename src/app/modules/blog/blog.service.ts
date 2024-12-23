@@ -25,7 +25,9 @@ const updateBlog = async (id: string, payload: Partial<IBlog>, authorEmail: stri
     }
 
     const blog = await BlogModel.findByIdAndUpdate(id, payload, { new: true });
-    return { blog, blogInfo };
+
+    const info = await BlogModel.findById(id); 
+    return { blog, info };
 };
 
 const deleteBlog = async (id: string, authorEmail: string) => {

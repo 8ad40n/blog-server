@@ -36,13 +36,13 @@ const updateBlog = catchAsync(async(req:Request, res:Response)=>{
     const author = req.user.email;
     const body = req.body;
     const result = await BlogServices.updateBlog(id, body, author);
-    const {blog, blogInfo} = result;
+    const {blog, info} = result;
     res.send({
         status: 200,
         success: true,
         message: "Blog updated successfully",
         data: {
-            blogInfo
+            info
         }
     })
 })
