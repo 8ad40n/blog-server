@@ -1,19 +1,21 @@
 import { Request, Response } from "express";
+import { Types } from "mongoose";
 import catchAsync from "../../utils/catchAsync";
 import { UserModel } from "../user/user.model";
 import { BlogServices } from "./blog.service";
 
-const addBlog = catchAsync(async(req:Request, res:Response)=>{
+const addBlog = catchAsync(async(req:Request, res:Response):Promise<any>=>{
     const authorEmail = req.user.email;
     const payload = req.body;
-    const author = await UserModel.findOne({email: authorEmail});
-    if (!author) {
-         res.status(404).send({
+    const authorDoc = await UserModel.findOne({ email: authorEmail });
+    if (!authorDoc) {
+        return res.status(404).send({
             status: 404,
             success: false,
             message: "Author not found",
         });
     }
+    const author: Types.ObjectId = authorDoc._id;
     const result = await BlogServices.addBlog(payload, author._id);
 
     res.send({
