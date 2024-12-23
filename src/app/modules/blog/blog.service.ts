@@ -49,9 +49,43 @@ const deleteBlog = async (id: string, authorEmail: string) => {
 
 }
 
+const getAllBlogs = async (query: Record<string, any>) => {
+    const { search, sortBy, sortOrder, filter } = query;
+  
+    let blogsQuery = BlogModel.find();
+  
+    if (search) {
+      blogsQuery = blogsQuery.find({
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { content: { $regex: search, $options: "i" } },
+        ],
+      });
+    }
+  
+    if (filter) {
+      blogsQuery = blogsQuery.find({ author: filter });
+    }
+  
+
+    if (sortBy && sortOrder) {
+      blogsQuery = blogsQuery.sort({ [sortBy]: sortOrder === "asc" ? 1 : -1 });
+    } else if (sortBy) {
+      blogsQuery = blogsQuery.sort({ [sortBy]: -1 }); 
+    } else {
+      blogsQuery = blogsQuery.sort({ createdAt: -1 });
+    }
+  
+    const blogs = await blogsQuery.populate("author", "_id name email");
+  
+    return blogs;
+  };
+  
+
 
 export const BlogServices ={
     addBlog,
     updateBlog,
     deleteBlog,
+    getAllBlogs,
 }

@@ -54,10 +54,25 @@ const deleteBlog = catchAsync(async(req:Request, res:Response)=>{
         success: true,
         message: "Blog deleted successfully",
     })
-})
+});
+
+
+const getAllBlogs = catchAsync(async (req: Request, res: Response) => {
+    const query = req.query;
+
+    const blogs = await BlogServices.getAllBlogs(query);
+
+    res.status(200).send({
+        success: true,
+        message: "Blogs fetched successfully",
+        statusCode: 200,
+        data: blogs,
+    });
+});
 
 export const BlogControllers = {
     addBlog,
     updateBlog,
     deleteBlog,
+    getAllBlogs,
 }
