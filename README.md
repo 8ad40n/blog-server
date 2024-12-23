@@ -12,41 +12,6 @@ This is the backend for a blogging platform where users can register, log in, cr
 - **MongoDB with Mongoose**
 
 ---
-
-## Features and Requirements
-
-### 1\. User Roles
-
-#### Admin:
-
-- Will be created manually in the database with predefined credentials.
-- Can delete any blog.
-- Can block any user by updating a property `isBlocked`.
-- **Cannot update any blog.**
-
-#### User:
-
-- Can register and log in.
-- Can create blogs (only when logged in).
-- Can update and delete their own blogs.
-- **Cannot perform admin actions.**
-
-### 2\. Authentication & Authorization
-
-#### Authentication:
-
-- Users must log in to perform write, update, and delete operations.
-
-#### Authorization:
-
-- Admin and User roles must be differentiated and secured.
-
-### 3\. Blog API
-
-- A public API for reading blogs:
-  - Includes blog title, content, author details & other necessary information.
-  - Supports **search**, **sorting**, and **filtering** functionalities.
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -102,6 +67,68 @@ Ensure the following are installed on your system:
    ```bash
    npm run build
    ```
+
+
+## Features and Requirements
+
+### 1\. User Roles
+
+#### Admin:
+
+- Will be created manually in the database with predefined credentials.
+- Can delete any blog.
+- Can block any user by updating a property `isBlocked`.
+- **Cannot update any blog.**
+
+#### User:
+
+- Can register and log in.
+- Can create blogs (only when logged in).
+- Can update and delete their own blogs.
+- **Cannot perform admin actions.**
+
+### 2\. Authentication & Authorization
+
+#### Authentication:
+
+- Users must log in to perform write, update, and delete operations.
+
+#### Authorization:
+
+- Admin and User roles must be differentiated and secured.
+
+### 3\. Blog API
+
+- A public API for reading blogs:
+  - Includes blog title, content, author details & other necessary information.
+  - Supports **search**, **sorting**, and **filtering** functionalities.
+
+
+## Models
+
+  
+
+**User Model:**
+
+*   `name`: string – The full name of the user.
+*   `email`: string – The email address of the user, used for authentication and communication.
+*   `password`: string – The password for the user, securely stored.
+*   `role`: "admin" | "user" – The role of the user, determining their access level. Default is "user".
+*   `isBlocked`: boolean – A flag indicating whether the user is blocked or not. Default is false.
+*   `createdAt`: Date – The timestamp when the user was created.
+*   `updatedAt`: Date – The timestamp of the last update to the user.
+
+  
+
+**Blog Model:**
+
+*   `title`: string – The title of the blog post.
+*   `content`: string – The main body or content of the blog post.
+*   `author`: ObjectId – A reference to the `User` model, indicating the author of the blog post.
+*   `isPublished`: boolean – A flag indicating whether the blog post is published. Default is true (published).
+*   `createdAt`: Date – The timestamp when the blog post was created.
+*   `updatedAt`: Date – The timestamp of the last update to the blog post.
+
 
 ## API Endpoints
 
