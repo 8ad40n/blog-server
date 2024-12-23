@@ -1,3 +1,4 @@
+import { BlogModel } from "../blog/blog.model";
 import { UserModel } from "../user/user.model";
 
 const blockUser = async (id:string) => {
@@ -9,7 +10,15 @@ const blockUser = async (id:string) => {
     await user.save();
     return user;
     
+};
+
+const deleteBlog = async (id:string) => {
+    const result = await BlogModel.findByIdAndDelete(id);
+    return result;
 }
+
+
 export const AdminServices = {
     blockUser,
+    deleteBlog,
 }
