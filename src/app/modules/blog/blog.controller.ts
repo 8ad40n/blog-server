@@ -19,9 +19,9 @@ const addBlog = catchAsync(async(req:Request, res:Response):Promise<any>=>{
     const result = await BlogServices.addBlog(payload, author._id);
 
     res.send({
-        status: 201,
         success: true,
         message: "Blog created successfully",
+        statusCode: 201,
         data: {
             _id: result._id,
             title: result.title,
@@ -38,9 +38,9 @@ const updateBlog = catchAsync(async(req:Request, res:Response)=>{
     const result = await BlogServices.updateBlog(id, body, author);
     const {blog, info} = result;
     res.send({
-        status: 200,
         success: true,
         message: "Blog updated successfully",
+        statusCode: 200,
         data: {
             info
         }
@@ -52,9 +52,9 @@ const deleteBlog = catchAsync(async(req:Request, res:Response)=>{
     const author = req.user.email;
     const result = await BlogServices.deleteBlog(id, author);
     res.send({
-        status: 200,
         success: true,
         message: "Blog deleted successfully",
+        statusCode: 200,
     })
 });
 
